@@ -14,11 +14,20 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun HomeScreen(onNext: () -> Unit) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Inicio: Funciona")
-    }
+       Column(
+           modifier = Modifier.fillMaxSize()
+       ) {
+           Header()
+           HomeContent()
+       }
+}
+
+@Composable
+fun Header() {
+
+}
+
+@Composable
+fun HomeContent() {
+
 }
