@@ -1,58 +1,56 @@
-package com.aureapubishing.teaApp.ui.theme
+package com.aureapublishing.teaApp.ui.theme
 
-import android.app.Activity
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
-)
+private val TeaAppColorScheme = lightColorScheme(
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    // Primary: main actions and buttons
+    primary = Secondary300,
+    onPrimary = Primary500,
+    primaryContainer = Secondary200,
+    onPrimaryContainer = Primary500,
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    // Secondary: green identity
+    secondary = Primary400,
+    onSecondary = Secondary100,
+    secondaryContainer = Primary100,
+    onSecondaryContainer = Primary500,
+
+    // Tertiary: decorative accents
+    tertiary = Secondary200,
+    onTertiary = Primary500,
+    tertiaryContainer = Secondary100,
+    onTertiaryContainer = Primary500,
+
+    // Background
+    background = Primary100,
+    onBackground = Primary500,
+
+    // Surfaces: cards and content
+    surface = Secondary100,
+    onSurface = Primary500,
+
+    // Borders
+    outline = Primary200,
+    outlineVariant = Primary100,
+
+    // Inverse colors
+    inversePrimary = Primary200,
+    inverseSurface = Primary500,
+    inverseOnSurface = Secondary100,
+
+    // Scrim
+    scrim = Primary500
 )
 
 @Composable
 fun TeaAppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
-
     MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
+        colorScheme = TeaAppColorScheme,
         content = content
     )
 }
