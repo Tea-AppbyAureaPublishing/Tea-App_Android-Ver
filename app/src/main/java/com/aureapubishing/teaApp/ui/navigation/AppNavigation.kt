@@ -1,5 +1,7 @@
 package com.aureapubishing.teaApp.ui.navigation
 
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -7,22 +9,24 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.aureapubishing.teaApp.R
 import com.aureapubishing.teaApp.ui.screens.home.HomeScreen
 import com.aureapubishing.teaApp.ui.screens.infusions.InfusionsScreen
 import com.aureapubishing.teaApp.ui.screens.profile.ProfileScreen
 import com.aureapubishing.teaApp.ui.screens.teas.TeasScreen
 
-sealed class Screen(val route: String, val label: String) {
-    data object Home : Screen("home", "Inicio")
-    data object Infusions : Screen("infusiones", "Infusiones")
-    data object Teas : Screen("tes", "Tés")
-    data object Profile: Screen("perfil", "Perfil")
+sealed class Screen(val route: String, val label: String, @DrawableRes val iconRes: Int) {
+    data object Home : Screen("home", "Inicio", R.drawable.home)
+    data object Infusions : Screen("infusiones", "Infusiones", R.drawable.infusions)
+    data object Teas : Screen("tes", "Tés", R.drawable.tea_leafs)
+    data object Profile: Screen("perfil", "Perfil", R.drawable.profile)
 }
 
 val bottomBarScreens = listOf(Screen.Home, Screen.Infusions, Screen.Teas, Screen.Profile)
@@ -69,7 +73,7 @@ fun MainScreen() {
                     NavigationBarItem(
                         selected = currentRoute == screen.route,
                         onClick = { navController.navigateToTab(screen.route) },
-                        icon = {},
+                        icon = {InsertImage(imageResId = screen.iconRes)},
                         label = { Text(screen.label) }
                     )
                 }
@@ -78,4 +82,15 @@ fun MainScreen() {
     ) { innerPadding ->
         AppNavHost(navController, Modifier.padding(innerPadding))
     }
+}
+
+
+@Composable
+fun InsertImage(
+    @DrawableRes imageResId: Int
+) {
+    Image(
+        painter = painterResource(id = imageResId),
+        contentDescription = "Imagen de la aplicación"
+    )
 }
