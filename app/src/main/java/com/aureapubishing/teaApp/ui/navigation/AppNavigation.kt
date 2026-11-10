@@ -25,7 +25,7 @@ sealed class Screen(val route: String, val label: String) {
     data object Profile: Screen("perfil", "Perfil")
 }
 
-val bottomBarScreens = listOf(Screen.Home, Screen.Infusions, Screen.Teas, Screen.Profile)
+val bottomBarScreens = listOf(Screen.Home, Screen.Infusions, Screen.Teas)
 
 fun NavHostController.navigateToTab(route: String) {
     navigate(route) {
@@ -35,27 +35,54 @@ fun NavHostController.navigateToTab(route: String) {
     }
 }
 
+
 @Composable
-fun AppNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
+fun AppNavHost(
+    navController: NavHostController,
+    modifier: Modifier = Modifier
+) {
     NavHost(
         navController = navController,
         startDestination = Screen.Home.route,
         modifier = modifier
     ) {
         composable(Screen.Home.route) {
-            HomeScreen(onNext = { navController.navigateToTab(Screen.Infusions.route) })
+            HomeScreen(
+                onNext = {
+                    navController.navigateToTab(Screen.Infusions.route)
+                },
+                onProfileClick = {
+                    navController.navigateToTab(Screen.Profile.route)
+                }
+            )
         }
+
         composable(Screen.Infusions.route) {
-            InfusionsScreen(onNext = { navController.navigateToTab(Screen.Teas.route) })
+            InfusionsScreen(
+                onNext = {
+                    navController.navigateToTab(Screen.Teas.route)
+                }
+            )
         }
+
         composable(Screen.Teas.route) {
-            TeasScreen(onNext = { navController.navigateToTab(Screen.Profile.route) })
+            TeasScreen(
+                onNext = {
+                    navController.navigateToTab(Screen.Profile.route)
+                }
+            )
         }
+
         composable(Screen.Profile.route) {
-            ProfileScreen(onNext = { navController.navigateToTab(Screen.Home.route) })
+            ProfileScreen(
+                onNext = {
+                    navController.navigateToTab(Screen.Home.route)
+                }
+            )
         }
     }
 }
+
 
 @Composable
 fun MainScreen() {
