@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.aureapubishing.teaApp.ui.layout.AppLayout
 import com.aureapubishing.teaApp.ui.screens.home.HomeScreen
 import com.aureapubishing.teaApp.ui.screens.infusions.InfusionsScreen
 import com.aureapubishing.teaApp.ui.screens.profile.ProfileScreen
@@ -50,9 +51,6 @@ fun AppNavHost(
             HomeScreen(
                 onNext = {
                     navController.navigateToTab(Screen.Infusions.route)
-                },
-                onProfileClick = {
-                    navController.navigateToTab(Screen.Profile.route)
                 }
             )
         }
@@ -84,10 +82,14 @@ fun AppNavHost(
 }
 
 
+
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+
+    val currentRoute = navController
+        .currentBackStackEntryAsState()
+        .value?.destination?.route
 
     Scaffold(
         bottomBar = {
@@ -95,14 +97,30 @@ fun MainScreen() {
                 bottomBarScreens.forEach { screen ->
                     NavigationBarItem(
                         selected = currentRoute == screen.route,
-                        onClick = { navController.navigateToTab(screen.route) },
+                        onClick = {
+                            navController.navigateToTab(screen.route)
+                        },
                         icon = {},
-                        label = { Text(screen.label) }
+                        label = {
+                            Text(screen.label)
+                        }
                     )
                 }
             }
         }
     ) { innerPadding ->
-        AppNavHost(navController, Modifier.padding(innerPadding))
+
+        AppLayout(
+            modifier = Modifier.padding(innerPadding),
+            showHeader = currentRoute != "login",
+            onProfileClick = {
+                navController.navigateToTab(Screen.Profile.route)
+            }
+        ) {
+            AppNavHost(
+                navController = navController,
+                modifier = Modifier.weight(1f)
+            )
+        }
     }
 }

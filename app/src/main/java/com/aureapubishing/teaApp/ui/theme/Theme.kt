@@ -3,14 +3,6 @@ package com.aureapublishing.teaApp.ui.theme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import com.aureapublishing.teaApp.ui.theme.Primary100
-import com.aureapublishing.teaApp.ui.theme.Primary200
-import com.aureapublishing.teaApp.ui.theme.Primary300
-import com.aureapublishing.teaApp.ui.theme.Primary400
-import com.aureapublishing.teaApp.ui.theme.Primary500
-import com.aureapublishing.teaApp.ui.theme.Secondary100
-import com.aureapublishing.teaApp.ui.theme.Secondary200
-import com.aureapublishing.teaApp.ui.theme.Secondary400
 
 private val TeaAppColorScheme = lightColorScheme(
 
