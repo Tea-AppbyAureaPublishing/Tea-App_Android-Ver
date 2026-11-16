@@ -1,64 +1,64 @@
-package com.aureapubishing.teaApp.ui.theme
+package com.aureapublishing.teaApp.ui.theme
 
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import com.aureapublishing.teaApp.ui.theme.Primary100
+import com.aureapublishing.teaApp.ui.theme.Primary200
+import com.aureapublishing.teaApp.ui.theme.Primary300
+import com.aureapublishing.teaApp.ui.theme.Primary400
+import com.aureapublishing.teaApp.ui.theme.Primary500
+import com.aureapublishing.teaApp.ui.theme.Secondary100
+import com.aureapublishing.teaApp.ui.theme.Secondary200
+import com.aureapublishing.teaApp.ui.theme.Secondary400
 
-private val LightColorScheme = lightColorScheme(
-    primary = Primary400,
-    onPrimary = Secondary100,
+private val TeaAppColorScheme = lightColorScheme(
 
-    secondary = Primary200,
-    onSecondary = Primary500,
+    // Primary: main actions and buttons
+    primary = Secondary300,
+    onPrimary = Primary500,
+    primaryContainer = Secondary200,
+    onPrimaryContainer = Primary500,
 
-    tertiary = Secondary400,
+    // Secondary: green identity
+    secondary = Primary400,
+    onSecondary = Secondary100,
+    secondaryContainer = Primary100,
+    onSecondaryContainer = Primary500,
+
+    // Tertiary: decorative accents
+    tertiary = Secondary200,
     onTertiary = Primary500,
+    tertiaryContainer = Secondary100,
+    onTertiaryContainer = Primary500,
 
-    background = Secondary100,
+    // Background
+    background = Primary100,
     onBackground = Primary500,
 
+    // Surfaces: cards and content
     surface = Secondary100,
     onSurface = Primary500,
 
-    surfaceVariant = Primary100,
-    onSurfaceVariant = Primary500
-)
+    // Borders
+    outline = Primary200,
+    outlineVariant = Primary100,
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Primary200,
-    onPrimary = Primary500,
+    // Inverse colors
+    inversePrimary = Primary300,
+    inverseSurface = Primary500,
+    inverseOnSurface = Secondary100,
 
-    secondary = Secondary200,
-    onSecondary = Primary500,
-
-    tertiary = Secondary400,
-    onTertiary = Primary500,
-
-    background = Primary500,
-    onBackground = Secondary100,
-
-    surface = Primary400,
-    onSurface = Secondary100,
-
-    surfaceVariant = Primary300,
-    onSurfaceVariant = Secondary100
+    // Scrim
+    scrim = Primary500
 )
 
 @Composable
 fun TeaAppTheme(
-    darkTheme: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = if (darkTheme) {
-        DarkColorScheme
-    } else {
-        LightColorScheme
-    }
-
     MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
+        colorScheme = TeaAppColorScheme,
         content = content
     )
 }
