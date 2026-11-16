@@ -1,7 +1,6 @@
 package com.aureapubishing.teaApp.ui.navigation
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -9,13 +8,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.aureapubishing.teaApp.ui.layout.AppLayout
 import com.aureapubishing.teaApp.R
 import com.aureapubishing.teaApp.ui.screens.home.HomeScreen
 import com.aureapubishing.teaApp.ui.screens.infusions.InfusionsScreen
@@ -54,9 +53,6 @@ fun AppNavHost(
             HomeScreen(
                 onNext = {
                     navController.navigateToTab(Screen.Infusions.route)
-                },
-                onProfileClick = {
-                    navController.navigateToTab(Screen.Profile.route)
                 }
             )
         }
@@ -88,10 +84,14 @@ fun AppNavHost(
 }
 
 
+
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+
+    val currentRoute = navController
+        .currentBackStackEntryAsState()
+        .value?.destination?.route
 
     Scaffold(
         bottomBar = {
@@ -99,25 +99,30 @@ fun MainScreen() {
                 bottomBarScreens.forEach { screen ->
                     NavigationBarItem(
                         selected = currentRoute == screen.route,
-                        onClick = { navController.navigateToTab(screen.route) },
-                        icon = {InsertImage(imageResId = screen.iconRes)},
-                        label = { Text(screen.label) }
+                        onClick = {
+                            navController.navigateToTab(screen.route)
+                        },
+                        icon = {},
+                        label = {
+                            Text(screen.label)
+                        }
                     )
                 }
             }
         }
     ) { innerPadding ->
-        AppNavHost(navController, Modifier.padding(innerPadding))
+
+        AppLayout(
+            modifier = Modifier.padding(innerPadding),
+            showHeader = currentRoute != "login",
+            onProfileClick = {
+                navController.navigateToTab(Screen.Profile.route)
+            }
+        ) {
+            AppNavHost(
+                navController = navController,
+                modifier = Modifier.weight(1f)
+            )
+        }
     }
-}
-
-
-@Composable
-fun InsertImage(
-    @DrawableRes imageResId: Int
-) {
-    Image(
-        painter = painterResource(id = imageResId),
-        contentDescription = "Imagen de la aplicación"
-    )
 }
