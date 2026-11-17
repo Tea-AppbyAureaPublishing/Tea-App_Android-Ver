@@ -1,3 +1,4 @@
+
 package com.aureapubishing.teaApp.ui.navigation
 
 import androidx.compose.foundation.layout.padding
@@ -17,25 +18,40 @@ import com.aureapubishing.teaApp.ui.layout.AppLayout
 import com.aureapubishing.teaApp.ui.screens.home.HomeScreen
 import com.aureapubishing.teaApp.ui.screens.infusions.InfusionsScreen
 import com.aureapubishing.teaApp.ui.screens.profile.ProfileScreen
+import com.aureapubishing.teaApp.ui.screens.profile.CreateTeaScreen
 import com.aureapubishing.teaApp.ui.screens.teas.TeasScreen
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
+import com.aureapubishing.teaApp.R
 
-sealed class Screen(val route: String, val label: String) {
-    data object Home : Screen("home", "Inicio")
-    data object Infusions : Screen("infusiones", "Infusiones")
-    data object Teas : Screen("tes", "Tés")
-    data object Profile: Screen("perfil", "Perfil")
+sealed class Screen(
+    val route: String,
+    val label: String,
+    @DrawableRes val iconRes: Int
+) {
+    data object Home : Screen("home", "Inicio", R.drawable.home)
+    data object Infusions : Screen("infusiones", "Infusiones", R.drawable.infusions)
+    data object Teas : Screen("tes", "Tés", R.drawable.tea_leafs)
+    data object Profile : Screen("perfil", "Perfil", R.drawable.profile)
+    data object CreateTea : Screen("createTea", "Crear té", R.drawable.tea_leafs)
 }
 
-val bottomBarScreens = listOf(Screen.Home, Screen.Infusions, Screen.Teas)
+val bottomBarScreens = listOf(
+    Screen.Home,
+    Screen.Infusions,
+    Screen.Teas
+)
 
 fun NavHostController.navigateToTab(route: String) {
     navigate(route) {
-        popUpTo(graph.findStartDestination().id) { saveState = true }
+        popUpTo(graph.findStartDestination().id) {
+            saveState = true
+        }
         launchSingleTop = true
         restoreState = true
     }
 }
-
 
 @Composable
 fun AppNavHost(
@@ -75,13 +91,22 @@ fun AppNavHost(
             ProfileScreen(
                 onNext = {
                     navController.navigateToTab(Screen.Home.route)
+                },
+                onCreateTeaClick = {
+                    navController.navigate(Screen.CreateTea.route)
+                }
+            )
+        }
+
+        composable(Screen.CreateTea.route) {
+            CreateTeaScreen(
+                onBack = {
+                    navController.popBackStack()
                 }
             )
         }
     }
 }
-
-
 
 @Composable
 fun MainScreen() {
@@ -100,7 +125,9 @@ fun MainScreen() {
                         onClick = {
                             navController.navigateToTab(screen.route)
                         },
-                        icon = {},
+                        icon = {
+                            InsertImage(imageResId = screen.iconRes)
+                        },
                         label = {
                             Text(screen.label)
                         }
@@ -109,7 +136,6 @@ fun MainScreen() {
             }
         }
     ) { innerPadding ->
-
         AppLayout(
             modifier = Modifier.padding(innerPadding),
             showHeader = currentRoute != "login",
@@ -123,4 +149,14 @@ fun MainScreen() {
             )
         }
     }
+}
+
+@Composable
+fun InsertImage(
+    @DrawableRes imageResId: Int
+) {
+    Image(
+        painter = painterResource(id = imageResId),
+        contentDescription = "Icono de navegación"
+    )
 }
