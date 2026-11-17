@@ -3,6 +3,7 @@ package com.aureapublishing.teaApp.ui.theme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import com.aureapubishing.teaApp.ui.theme.TeaAppTypography
 
 private val TeaAppColorScheme = lightColorScheme(
 
@@ -51,6 +52,7 @@ fun TeaAppTheme(
 ) {
     MaterialTheme(
         colorScheme = TeaAppColorScheme,
+        typography = TeaAppTypography,
         content = content
     )
 }
