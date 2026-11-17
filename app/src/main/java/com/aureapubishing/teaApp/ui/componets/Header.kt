@@ -31,8 +31,8 @@ fun Header(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(64.dp)
-            .background(MaterialTheme.colorScheme.inversePrimary)
+            .height(116.dp)
+            .background(MaterialTheme.colorScheme.outline)
             .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -44,12 +44,12 @@ fun Header(
             Image(
                 painter = painterResource(R.drawable.favicon),
                 contentDescription = "Logo de Tea-App",
-                modifier = Modifier.size(38.dp)
+                modifier = Modifier.size(68.dp)
             )
 
             Text(
                 text = "Tea-App",
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.headlineMedium,
                 color = Secondary100
             )
         }
@@ -66,11 +66,11 @@ fun ProfileIcon(
 ) {
     Box(
         modifier = Modifier
-            .size(44.dp)
+            .size(73.dp)
             .clip(CircleShape)
             .background(MaterialTheme.colorScheme.onBackground)
             .clickable(onClick = onClick)
-            .padding(4.dp),
+            .padding(6.dp),
         contentAlignment = Alignment.Center
     ) {
         Box(
@@ -83,7 +83,7 @@ fun ProfileIcon(
             Image(
                 painter = painterResource(R.drawable.profile),
                 contentDescription = "Perfil de usuario",
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(68.dp)
             )
         }
     }
