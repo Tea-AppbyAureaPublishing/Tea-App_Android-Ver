@@ -18,6 +18,7 @@ import com.aureapubishing.teaApp.ui.screens.home.HomeScreen
 import com.aureapubishing.teaApp.ui.screens.infusions.InfusionsScreen
 import com.aureapubishing.teaApp.ui.screens.profile.ProfileScreen
 import com.aureapubishing.teaApp.ui.screens.teas.TeasScreen
+import androidx.compose.foundation.layout.WindowInsets
 
 sealed class Screen(val route: String, val label: String) {
     data object Home : Screen("home", "Inicio")
@@ -92,6 +93,7 @@ fun MainScreen() {
         .value?.destination?.route
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             NavigationBar {
                 bottomBarScreens.forEach { screen ->
