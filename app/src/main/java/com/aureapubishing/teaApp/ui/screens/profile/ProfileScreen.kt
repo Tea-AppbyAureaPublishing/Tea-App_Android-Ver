@@ -1,4 +1,3 @@
-
 package com.aureapubishing.teaApp.ui.screens.profile
 
 import androidx.compose.foundation.Image
@@ -10,79 +9,64 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.aureapubishing.teaApp.R
 
-// Colores de la pantalla
-private val Cream = Color(0xFFFFF8E1)
-private val DarkGreen = Color(0xFF2A3225)
-private val Green = Color(0xFF485C43)
-private val Yellow = Color(0xFFF2C438)
-private val AvatarGreen = Color(0xFFB7C9B8)
-private val ButtonYellow = Color(0xFFE4AC26)
 
 // Pantalla principal del perfil
 @Composable
 fun ProfileScreen(
-    onNext: () -> Unit,
-    onCreateTeaClick: () -> Unit,
     onEditProfileClick: () -> Unit
 ) {
     // Al entrar no habrá ninguna sección seleccionada
     var selectedSection by remember { mutableStateOf<String?>(null) }
 
-    Column(
+    Box(
         modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        ProfileContent(
-            onEditProfileClick = onEditProfileClick
-        )
+    ){
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            ProfileContent(
+                onEditProfileClick = onEditProfileClick
+            )
 
-        ProfileOption(
-            selectedSection = selectedSection,
-            onSectionSelected = { selectedSection = it }
-        )
+            ProfileOption(
+                selectedSection = selectedSection,
+                onSectionSelected = { selectedSection = it }
+            )
 
-        // Muestra el contenido de la sección seleccionada
-        SelectedProfileSection(
-            selectedSection = selectedSection,
-            onCreateTeaClick = onCreateTeaClick
-        )
+            // Muestra el contenido de la sección seleccionada
+            SelectedProfileSection(
+                selectedSection = selectedSection
+            )
+        }
     }
 }
 
 // Decide qué contenido mostrar según la sección seleccionada
 @Composable
 private fun SelectedProfileSection(
-    selectedSection: String?,
-    onCreateTeaClick: () -> Unit
+    selectedSection: String?
 ) {
     when (selectedSection) {
         "Tés propios" -> {
-            MyTeasContent(
-                onAddTeaClick = onCreateTeaClick
-            )
+            MyTeasContent()
         }
 
         "Tés favoritos" -> {
             EmptySectionContent("Todavía no tienes tés favoritos")
-        }
-
-        "Pedidos" -> {
-            EmptySectionContent("Todavía no tienes pedidos")
         }
 
         null -> {
@@ -104,8 +88,8 @@ fun ProfileContent(
     ) {
         Text(
             text = "Mi perfil",
-            fontSize = 30.sp,
-            color = Yellow
+            style = MaterialTheme.typography.headlineLarge,
+            color = MaterialTheme.colorScheme.primary // Secondary300 (amarillo destacado del tema)
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -125,7 +109,7 @@ fun ProfileUserCard(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = Cream,
+                color = MaterialTheme.colorScheme.surface, // Secondary100 (fondo de tarjeta)
                 shape = RoundedCornerShape(20.dp)
             )
             .padding(20.dp),
@@ -152,7 +136,7 @@ private fun ProfileImage() {
         modifier = Modifier
             .size(110.dp)
             .background(
-                color = AvatarGreen,
+                color = MaterialTheme.colorScheme.outline, // Primary200 (verde suave para el avatar)
                 shape = CircleShape
             ),
         contentAlignment = Alignment.Center
@@ -161,8 +145,9 @@ private fun ProfileImage() {
             painter = painterResource(id = R.drawable.profile),
             contentDescription = "Foto de perfil",
             modifier = Modifier
-                .size(80.dp)
-                .clip(CircleShape),
+                .size(90.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.surface),
             contentScale = ContentScale.Crop
         )
     }
@@ -179,16 +164,16 @@ private fun ProfileUserInformation(
     ) {
         Text(
             text = "Nombre de usuario",
-            fontSize = 20.sp,
-            color = DarkGreen
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface // Primary500 (texto sobre superficie)
         )
 
         Spacer(modifier = Modifier.height(5.dp))
 
         Text(
             text = "correo@ejemplo.com",
-            fontSize = 14.sp,
-            color = Color.Gray
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant // Color secundario legible sobre superficie
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -196,13 +181,11 @@ private fun ProfileUserInformation(
         Button(
             onClick = onEditProfileClick,
             colors = ButtonDefaults.buttonColors(
-                containerColor = DarkGreen
+                containerColor = MaterialTheme.colorScheme.inverseSurface, // Primary500 (verde muy oscuro)
+                contentColor = MaterialTheme.colorScheme.inverseOnSurface // Secondary100 (crema)
             )
         ) {
-            Text(
-                text = "Editar perfil",
-                color = Cream
-            )
+            Text(text = "Editar perfil")
         }
     }
 }
@@ -215,8 +198,7 @@ fun ProfileOption(
 ) {
     val sections = listOf(
         "Tés favoritos",
-        "Tés propios",
-        "Pedidos"
+        "Tés propios"
     )
 
     Column(
@@ -224,27 +206,23 @@ fun ProfileOption(
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 10.dp)
     ) {
-        BoxWithConstraints(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            // Repartimos el ancho disponible entre los tres botones
-            val buttonWidth = (maxWidth - 16.dp) / 3
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                sections.forEach { section ->
-                    ProfileSectionButton(
-                        section = section,
-                        isSelected = selectedSection == section,
-                        buttonWidth = buttonWidth,
-                        onClick = {
-                            onSectionSelected(section)
-                        }
-                    )
-                }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 10.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            sections.forEach { section ->
+                ProfileSectionButton(
+                    section = section,
+                    isSelected = selectedSection == section,
+                    modifier = Modifier.weight(1f),
+                    onClick = {
+                        onSectionSelected(section)
+                    }
+                )
             }
         }
     }
@@ -255,24 +233,25 @@ fun ProfileOption(
 private fun ProfileSectionButton(
     section: String,
     isSelected: Boolean,
-    buttonWidth: Dp,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     Button(
         onClick = onClick,
-        modifier = Modifier.width(buttonWidth),
+        modifier = modifier,
         contentPadding = PaddingValues(
             horizontal = 2.dp,
             vertical = 8.dp
         ),
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (isSelected) Green else Cream,
-            contentColor = if (isSelected) Cream else DarkGreen
+            // Seleccionado: Primary400 / Secondary100 | No seleccionado: Secondary100 / Primary500
+            containerColor = if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.surface,
+            contentColor = if (isSelected) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurface
         )
     ) {
         Text(
             text = section,
-            fontSize = 11.sp,
+            style = MaterialTheme.typography.labelSmall,
             maxLines = 1
         )
     }
@@ -280,9 +259,7 @@ private fun ProfileSectionButton(
 
 // Contenido de la sección de tés propios
 @Composable
-fun MyTeasContent(
-    onAddTeaClick: () -> Unit
-) {
+fun MyTeasContent() {
     // Lista provisional donde guardaremos los tés del usuario
     val teas = remember { mutableStateListOf<String>() }
 
@@ -298,12 +275,6 @@ fun MyTeasContent(
                 MyTeaItem(tea)
             }
         }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        AddTeaButton(onClick = onAddTeaClick)
-
-        Spacer(modifier = Modifier.height(20.dp))
     }
 }
 
@@ -317,7 +288,7 @@ private fun MyTeaItem(
             .fillMaxWidth()
             .padding(bottom = 12.dp)
             .background(
-                color = Cream,
+                color = MaterialTheme.colorScheme.surface, // Secondary100
                 shape = RoundedCornerShape(16.dp)
             )
             .padding(18.dp),
@@ -326,36 +297,9 @@ private fun MyTeaItem(
     ) {
         Text(
             text = tea,
-            fontSize = 17.sp,
-            color = DarkGreen
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface // Primary500
         )
-    }
-}
-
-// Botón para añadir un nuevo té
-@Composable
-private fun AddTeaButton(
-    onClick: () -> Unit
-) {
-    Box(
-        modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.CenterEnd
-    ) {
-        Button(
-            onClick = onClick,
-            modifier = Modifier.size(55.dp),
-            shape = CircleShape,
-            contentPadding = PaddingValues(0.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = ButtonYellow
-            )
-        ) {
-            Text(
-                text = "+",
-                fontSize = 30.sp,
-                color = DarkGreen
-            )
-        }
     }
 }
 
@@ -372,8 +316,8 @@ fun EmptySectionContent(
     ) {
         Text(
             text = message,
-            color = DarkGreen,
-            fontSize = 16.sp
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onBackground // Primary500 (texto sobre fondo general)
         )
     }
 }

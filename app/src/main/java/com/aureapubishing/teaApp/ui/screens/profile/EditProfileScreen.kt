@@ -1,4 +1,3 @@
-
 package com.aureapubishing.teaApp.ui.screens.profile
 
 import androidx.compose.foundation.Image
@@ -18,17 +17,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.aureapubishing.teaApp.R
 import com.aureapubishing.teaApp.ui.components.AppBackground
 
-private val Cream = Color(0xFFFFF8E1)
-private val DarkGreen = Color(0xFF2A3225)
-private val Green = Color(0xFF485C43)
-
 @Composable
 fun EditProfileScreen(
-    onWelcomeClick: () -> Unit,
+    onLogoutClick: () -> Unit,
     onDeleteAccount: () -> Unit,
     onConfirm: () -> Unit
 ) {
@@ -50,7 +44,7 @@ fun EditProfileScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth(0.88f)
-                    .background(Cream, RoundedCornerShape(20.dp))
+                    .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -60,8 +54,8 @@ fun EditProfileScreen(
 
                 Text(
                     text = "Nombre de usuario",
-                    fontSize = 15.sp,
-                    color = DarkGreen
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -89,9 +83,10 @@ fun EditProfileScreen(
                 error?.let {
                     Text(
                         text = it,
-                        color = Color.Red,
-                        fontSize = 12.sp
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error
                     )
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
 
                 ConfirmChangesButton(
@@ -111,7 +106,7 @@ fun EditProfileScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 ProfileActions(
-                    onLogout = onWelcomeClick,
+                    onLogout = onLogoutClick,
                     onDelete = {
                         showDeleteDialog = true
                     }
@@ -144,7 +139,7 @@ private fun ProfileImage() {
     Box(
         modifier = Modifier
             .size(85.dp)
-            .background(Color(0xFFB7C9B8), CircleShape),
+            .background(MaterialTheme.colorScheme.outline, CircleShape),
         contentAlignment = Alignment.Center
     ) {
         Image(
@@ -241,13 +236,10 @@ private fun ConfirmChangesButton(
 ) {
     Button(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = DarkGreen
-        )
     ) {
         Text(
             text = "Confirmar",
-            color = Cream
+            style = MaterialTheme.typography.labelLarge
         )
     }
 }
@@ -266,14 +258,16 @@ private fun ProfileActions(
             onClick = onLogout,
             modifier = Modifier.weight(1f),
             contentPadding = PaddingValues(horizontal = 4.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Cream
+            colors = ButtonDefaults.outlinedButtonColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.error
             )
         ) {
             Text(
                 text = "Cerrar sesión",
                 color = Color.Red,
-                fontSize = 11.sp
+                style = MaterialTheme.typography.labelSmall,
+                maxLines = 1
             )
         }
 
@@ -281,14 +275,16 @@ private fun ProfileActions(
             onClick = onDelete,
             modifier = Modifier.weight(1f),
             contentPadding = PaddingValues(horizontal = 4.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Cream
+            colors = ButtonDefaults.outlinedButtonColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.error
             )
         ) {
             Text(
                 text = "Eliminar cuenta",
+                style = MaterialTheme.typography.labelSmall,
                 color = Color.Red,
-                fontSize = 11.sp
+                maxLines = 1
             )
         }
     }
@@ -308,22 +304,27 @@ private fun DeleteAccountDialog(
         title = {
             Text(
                 text = "Eliminar cuenta",
-                color = DarkGreen
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurface
             )
         },
         text = {
             Column {
                 Text(
                     text = "¿Estás seguro de que quieres eliminar tu cuenta? " +
-                            "Esta acción será irreversible."
+                            "Esta acción será irreversible.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                Text("Para continuar, escribe la palabra ELIMINAR:")
-
+                Text(
+                    text = "Para continuar, escribe la palabra ELIMINAR:",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
                 Spacer(modifier = Modifier.height(8.dp))
-
                 OutlinedTextField(
                     value = confirmation,
                     onValueChange = {
@@ -332,16 +333,19 @@ private fun DeleteAccountDialog(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
-                    placeholder = { Text("ELIMINAR") }
+                    placeholder = {
+                        Text(
+                            text = "ELIMINAR",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
                 )
-
                 error?.let {
                     Spacer(modifier = Modifier.height(5.dp))
-
                     Text(
                         text = it,
-                        color = Color.Red,
-                        fontSize = 12.sp
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error
                     )
                 }
             }
@@ -356,13 +360,13 @@ private fun DeleteAccountDialog(
                     }
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Red
+                    containerColor = MaterialTheme.colorScheme.error,
+                    contentColor = MaterialTheme.colorScheme.onError
                 )
             ) {
                 Text(
                     text = "Eliminar definitivamente",
-                    color = Color.White,
-                    fontSize = 12.sp
+                    style = MaterialTheme.typography.labelMedium
                 )
             }
         },
@@ -370,10 +374,11 @@ private fun DeleteAccountDialog(
             TextButton(onClick = onDismiss) {
                 Text(
                     text = "Cancelar",
-                    color = Green
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.secondary
                 )
             }
         },
-        containerColor = Cream
+        containerColor = MaterialTheme.colorScheme.surface
     )
 }
