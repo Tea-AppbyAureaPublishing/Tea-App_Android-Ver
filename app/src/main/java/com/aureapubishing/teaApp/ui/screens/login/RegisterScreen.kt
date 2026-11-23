@@ -1,4 +1,3 @@
-
 package com.aureapubishing.teaApp.ui.screens.login
 
 import androidx.compose.foundation.Image
@@ -8,6 +7,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -17,16 +17,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.aureapubishing.teaApp.R
 import com.aureapubishing.teaApp.ui.components.AppBackground
-
-// Colores de la pantalla
-private val Cream = Color(0xFFFFF8E1)
-private val DarkGreen = Color(0xFF263D21)
 
 // Pantalla principal de registro
 @Composable
@@ -42,20 +37,19 @@ fun RegisterScreen(
     var error by remember { mutableStateOf<String?>(null) }
     var message by remember { mutableStateOf<String?>(null) }
 
-    Scaffold { innerPadding ->
-        AppBackground {
+    AppBackground {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
-            ){
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.favicon),
                     contentDescription = "Logo de Tea-App",
-                    modifier = Modifier.size(50.dp)
+                    modifier = Modifier.size(120.dp)
                 )
+
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(innerPadding)
                         .padding(20.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -107,7 +101,6 @@ fun RegisterScreen(
                 }
             }
         }
-    }
 }
 
 // Formulario completo de registro
@@ -131,7 +124,7 @@ private fun RegisterForm(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(25.dp))
-            .background(Cream)
+            .background(MaterialTheme.colorScheme.surface) // Secondary100 (tarjetas y superficies)
             .verticalScroll(rememberScrollState())
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -140,7 +133,7 @@ private fun RegisterForm(
         Text(
             text = "Crear cuenta",
             style = MaterialTheme.typography.headlineMedium,
-            color = DarkGreen
+            color = MaterialTheme.colorScheme.onSurface // Primary500 (texto sobre superficie)
         )
 
         Spacer(modifier = Modifier.height(25.dp))
@@ -276,14 +269,14 @@ private fun FormMessages(
     error?.let {
         Text(
             text = it,
-            color = MaterialTheme.colorScheme.error
+            color = MaterialTheme.colorScheme.error // Color de error del tema
         )
     }
 
     message?.let {
         Text(
             text = it,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.secondary // Primary400 (verde oscuro legible sobre surface)
         )
     }
 }
@@ -297,7 +290,11 @@ private fun RegisterButton(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .height(55.dp)
+            .height(55.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary, // Secondary300 (acción principal)
+            contentColor = MaterialTheme.colorScheme.onPrimary // Primary500 (texto sobre primario)
+        )
     ) {
         Text("Crear cuenta")
     }
@@ -313,6 +310,9 @@ private fun RegisterNavigationButtons(
         onClick = onLogin,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Text("¿Ya tienes cuenta? Inicia sesión")
+        Text(
+            text = "¿Ya tienes cuenta? Inicia sesión",
+            color = MaterialTheme.colorScheme.secondary // Primary400 (identidad verde secundaria)
+        )
     }
 }

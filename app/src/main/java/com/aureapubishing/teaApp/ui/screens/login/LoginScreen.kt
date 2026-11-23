@@ -1,4 +1,3 @@
-
 package com.aureapubishing.teaApp.ui.screens.login
 
 import androidx.compose.foundation.Image
@@ -7,24 +6,18 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.aureapubishing.teaApp.R
 import com.aureapubishing.teaApp.ui.components.AppBackground
-
-// Colores de la pantalla
-private val Cream = Color(0xFFFFF8E1)
-private val DarkGreen = Color(0xFF2A3225)
-private val Green = Color(0xFF485C43)
 
 // Pantalla principal de inicio de sesión
 @Composable
@@ -41,11 +34,21 @@ fun LoginScreen(
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
-        ){
+        ) {
+            Spacer(modifier = Modifier.height(70.dp))
+
+            Text(
+                text = "Bienvenido a Tea-App",
+                style = MaterialTheme.typography.headlineMedium, // Tipografía principal del tema
+                color = MaterialTheme.colorScheme.onBackground // Primary500 (texto sobre fondo)
+            )
+
+            Spacer(modifier = Modifier.height(30.dp))
+
             Image(
                 painter = painterResource(id = R.drawable.favicon),
                 contentDescription = "Logo de Tea-App",
-                modifier = Modifier.size(50.dp)
+                modifier = Modifier.size(120.dp)
             )
 
             Box(
@@ -77,6 +80,7 @@ fun LoginScreen(
                     onBack = onBack
                 )
             }
+
         }
 
     }
@@ -97,14 +101,15 @@ private fun LoginForm(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Cream, RoundedCornerShape(20.dp))
+            // Secondary100 (color para tarjetas y superficies)
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
             .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = "Iniciar sesión",
-            fontSize = 24.sp,
-            color = DarkGreen
+            style = MaterialTheme.typography.headlineMedium, // Igual que "Crear cuenta" en RegisterScreen
+            color = MaterialTheme.colorScheme.onSurface // Primary500 (texto sobre superficie)
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -127,8 +132,8 @@ private fun LoginForm(
         error?.let {
             Text(
                 text = it,
-                color = Color.Red,
-                fontSize = 13.sp
+                style = MaterialTheme.typography.bodySmall, // Estilo del tema para textos de error/ayuda
+                color = MaterialTheme.colorScheme.error // Color de error del tema
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -209,13 +214,11 @@ private fun LoginButton(
             .fillMaxWidth()
             .height(50.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = DarkGreen
+            containerColor = MaterialTheme.colorScheme.primary, // Secondary300 (acción principal)
+            contentColor = MaterialTheme.colorScheme.onPrimary // Primary500 (texto sobre primario)
         )
     ) {
-        Text(
-            text = "Iniciar sesión",
-            color = Cream
-        )
+        Text(text = "Iniciar sesión")
     }
 }
 
@@ -228,7 +231,7 @@ private fun LoginNavigationButtons(
     TextButton(onClick = onRegister) {
         Text(
             text = "¿No tienes cuenta? Regístrate",
-            color = Green
+            color = MaterialTheme.colorScheme.secondary // Primary400 (identidad verde secundaria)
         )
     }
 }
