@@ -67,6 +67,14 @@ val TeaAppTypography = MaterialTypography(
         lineHeight = 30.sp
     ),
 
+    // HEADING MICRO
+    titleSmall = TextStyle(
+        fontFamily = PlayfairDisplay,
+        fontWeight = FontWeight.Bold,
+        fontSize = 24.sp,
+        lineHeight = 32.sp
+    ),
+
     // SUBTITLE - Poppins
     titleLarge = TextStyle(
         fontFamily = Poppins,
@@ -102,7 +110,7 @@ val TeaAppTypography = MaterialTypography(
         fontFamily = Poppins,
         fontWeight = FontWeight.Medium,
         fontSize = 14.sp,
-        lineHeight = 14.sp
+        lineHeight = 21.sp
     ),
 
     // MICRO
@@ -111,13 +119,5 @@ val TeaAppTypography = MaterialTypography(
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
         lineHeight = 12.sp
-    ),
-
-    // HEADING MICRO
-    titleSmall = TextStyle(
-        fontFamily = DMSerifDisplay,
-        fontWeight = FontWeight.Normal,
-        fontSize = 24.sp,
-        lineHeight = 24.sp
     )
 )

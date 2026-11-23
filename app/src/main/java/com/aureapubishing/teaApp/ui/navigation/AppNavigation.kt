@@ -1,8 +1,5 @@
-
 package com.aureapubishing.teaApp.ui.navigation
 
-import androidx.annotation.DrawableRes
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -10,57 +7,30 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-
-import com.aureapubishing.teaApp.R
 import com.aureapubishing.teaApp.ui.layout.AppLayout
-
 import com.aureapubishing.teaApp.ui.screens.home.HomeScreen
 import com.aureapubishing.teaApp.ui.screens.infusions.InfusionsScreen
-import com.aureapubishing.teaApp.ui.screens.login.LoginScreen
-import com.aureapubishing.teaApp.ui.screens.login.RegisterScreen
 import com.aureapubishing.teaApp.ui.screens.profile.ProfileScreen
 import com.aureapubishing.teaApp.ui.screens.teas.TeasScreen
-import com.aureapubishing.teaApp.ui.screens.welcome.WelcomeScreen
-import com.aureapubishing.teaApp.ui.screens.profile.EditProfileScreen
 
-
-sealed class Screen(
-    val route: String,
-    val label: String,
-    @DrawableRes val iconRes: Int = 0
-) {
-    data object Welcome : Screen("welcome", "Bienvenida")
-    data object Login : Screen("login", "Iniciar sesión")
-    data object Register : Screen("register", "Registrarse")
-
-    data object Home : Screen("home", "Inicio", R.drawable.home)
-    data object Infusions : Screen("infusiones", "Infusiones", R.drawable.infusions)
-    data object Teas : Screen("tes", "Tés", R.drawable.tea_leafs)
-    data object Profile : Screen("perfil", "Perfil", R.drawable.profile)
-    data object CreateTea : Screen("createTea", "Crear té")
-    data object EditProfile : Screen("editProfile", "Editar perfil")
+sealed class Screen(val route: String, val label: String) {
+    data object Home : Screen("home", "Inicio")
+    data object Infusions : Screen("infusiones", "Infusiones")
+    data object Teas : Screen("tes", "Tés")
+    data object Profile: Screen("perfil", "Perfil")
 }
 
-
-val bottomBarScreens = listOf(
-    Screen.Home,
-    Screen.Infusions,
-    Screen.Teas
-)
-
+val bottomBarScreens = listOf(Screen.Home, Screen.Infusions, Screen.Teas)
 
 fun NavHostController.navigateToTab(route: String) {
     navigate(route) {
-        popUpTo(graph.findStartDestination().id) {
-            saveState = true
-        }
+        popUpTo(graph.findStartDestination().id) { saveState = true }
         launchSingleTop = true
         restoreState = true
     }
@@ -72,57 +42,11 @@ fun AppNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-
     NavHost(
         navController = navController,
-        startDestination = Screen.Welcome.route,
+        startDestination = Screen.Home.route,
         modifier = modifier
     ) {
-
-        // WELCOME
-        composable(Screen.Welcome.route) {
-            WelcomeScreen(
-                onLogin = {
-                    navController.navigate(Screen.Login.route)
-                },
-                onRegister = {
-                    navController.navigate(Screen.Register.route)
-                }
-            )
-        }
-
-        // LOGIN
-        composable(Screen.Login.route) {
-            LoginScreen(
-                onBack = {
-                    navController.popBackStack()
-                },
-                onLoggedIn = {
-                    navController.navigate(Screen.Home.route) {
-                        popUpTo(Screen.Welcome.route) {
-                            inclusive = true
-                        }
-                    }
-                },
-                onRegister = {
-                    navController.navigate(Screen.Register.route)
-                }
-            )
-        }
-
-        // REGISTER
-        composable(Screen.Register.route) {
-            RegisterScreen(
-                onBack = {
-                    navController.popBackStack()
-                },
-                onLogin = {
-                    navController.popBackStack()
-                }
-            )
-        }
-
-        // HOME
         composable(Screen.Home.route) {
             HomeScreen(
                 onNext = {
@@ -131,7 +55,6 @@ fun AppNavHost(
             )
         }
 
-        // INFUSIONS
         composable(Screen.Infusions.route) {
             InfusionsScreen(
                 onNext = {
@@ -140,7 +63,6 @@ fun AppNavHost(
             )
         }
 
-        // TEAS
         composable(Screen.Teas.route) {
             TeasScreen(
                 onNext = {
@@ -149,40 +71,10 @@ fun AppNavHost(
             )
         }
 
-        // PROFILE
         composable(Screen.Profile.route) {
             ProfileScreen(
                 onNext = {
                     navController.navigateToTab(Screen.Home.route)
-                },
-                onCreateTeaClick = {
-                    navController.navigate(Screen.CreateTea.route)
-                },
-                onEditProfileClick = {
-                    navController.navigate(Screen.EditProfile.route)
-                }
-            )
-        }
-
-        // EDIT PROFILE
-        composable(Screen.EditProfile.route) {
-            EditProfileScreen(
-                onWelcomeClick = {
-                    navController.navigate(Screen.Welcome.route) {
-                        popUpTo(0) {
-                            inclusive = true
-                        }
-                    }
-                },
-                onDeleteAccount = {
-                    navController.navigate(Screen.Welcome.route) {
-                        popUpTo(0) {
-                            inclusive = true
-                        }
-                    }
-                },
-                onConfirm = {
-                    navController.popBackStack()
                 }
             )
         }
@@ -190,76 +82,45 @@ fun AppNavHost(
 }
 
 
+
 @Composable
 fun MainScreen() {
-
     val navController = rememberNavController()
 
     val currentRoute = navController
         .currentBackStackEntryAsState()
         .value?.destination?.route
 
-    val isAccessScreen =
-        currentRoute == Screen.Welcome.route ||
-                currentRoute == Screen.Login.route ||
-                currentRoute == Screen.Register.route
-
     Scaffold(
         bottomBar = {
-
-            if (!isAccessScreen) {
-
-                NavigationBar {
-
-                    bottomBarScreens.forEach { screen ->
-
-                        NavigationBarItem(
-                            selected = currentRoute == screen.route,
-
-                            onClick = {
-                                navController.navigateToTab(screen.route)
-                            },
-
-                            icon = {
-                                InsertImage(imageResId = screen.iconRes)
-                            },
-
-                            label = {
-                                Text(screen.label)
-                            }
-                        )
-                    }
+            NavigationBar {
+                bottomBarScreens.forEach { screen ->
+                    NavigationBarItem(
+                        selected = currentRoute == screen.route,
+                        onClick = {
+                            navController.navigateToTab(screen.route)
+                        },
+                        icon = {},
+                        label = {
+                            Text(screen.label)
+                        }
+                    )
                 }
             }
         }
-
     ) { innerPadding ->
 
         AppLayout(
             modifier = Modifier.padding(innerPadding),
-            showHeader = !isAccessScreen,
-            isProfile = currentRoute == Screen.Profile.route ||
-            currentRoute == Screen.EditProfile.route,
+            showHeader = currentRoute != "login",
             onProfileClick = {
                 navController.navigateToTab(Screen.Profile.route)
             }
         ) {
-
             AppNavHost(
                 navController = navController,
                 modifier = Modifier.weight(1f)
             )
         }
     }
-}
-
-
-@Composable
-fun InsertImage(
-    @DrawableRes imageResId: Int
-) {
-    Image(
-        painter = painterResource(id = imageResId),
-        contentDescription = "Icono de navegación"
-    )
 }
