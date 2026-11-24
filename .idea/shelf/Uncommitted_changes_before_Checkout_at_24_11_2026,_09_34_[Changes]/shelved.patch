@@ -1,0 +1,79 @@
+Index: app/src/main/java/com/aureapubishing/teaApp/ui/navigation/AppNavigation.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.aureapubishing.teaApp.ui.navigation\n\nimport androidx.annotation.DrawableRes\nimport androidx.compose.foundation.Image\nimport androidx.compose.foundation.layout.padding\nimport androidx.compose.material3.NavigationBar\nimport androidx.compose.material3.NavigationBarItem\nimport androidx.compose.material3.Scaffold\nimport androidx.compose.material3.Text\nimport androidx.compose.runtime.Composable\nimport androidx.compose.ui.Modifier\nimport androidx.compose.ui.res.painterResource\nimport androidx.navigation.NavGraph.Companion.findStartDestination\nimport androidx.navigation.NavHostController\nimport androidx.navigation.compose.NavHost\nimport androidx.navigation.compose.composable\nimport androidx.navigation.compose.currentBackStackEntryAsState\nimport androidx.navigation.compose.rememberNavController\nimport com.aureapubishing.teaApp.R\nimport com.aureapubishing.teaApp.ui.layout.AppLayout\nimport com.aureapubishing.teaApp.ui.screens.home.HomeScreen\nimport com.aureapubishing.teaApp.ui.screens.infusions.InfusionsScreen\nimport com.aureapubishing.teaApp.ui.screens.login.LoginScreen\nimport com.aureapubishing.teaApp.ui.screens.login.RegisterScreen\nimport com.aureapubishing.teaApp.ui.screens.profile.EditProfileScreen\nimport com.aureapubishing.teaApp.ui.screens.profile.ProfileScreen\nimport com.aureapubishing.teaApp.ui.screens.teas.TeasScreen\n\nsealed class Screen(\n    val route: String,\n    val label: String,\n    @DrawableRes val iconRes: Int = 0\n) {\n    data object Welcome : Screen(\"welcome\", \"Bienvenida\")\n    data object Login : Screen(\"login\", \"Iniciar sesión\")\n    data object Register : Screen(\"register\", \"Registrarse\")\n\n    data object Home : Screen(\"home\", \"Inicio\", R.drawable.home)\n    data object Infusions : Screen(\"infusiones\", \"Infusiones\", R.drawable.infusions)\n    data object Teas : Screen(\"tes\", \"Tés\", R.drawable.tea_leafs)\n    data object Profile : Screen(\"perfil\", \"Perfil\", R.drawable.profile)\n    // data object CreateTea : Screen(\"createTea\", \"Crear té\")\n    data object EditProfile : Screen(\"editProfile\", \"Editar perfil\")\n}\n\n\nval bottomBarScreens = listOf(Screen.Home, Screen.Infusions, Screen.Teas)\n\nfun NavHostController.navigateToTab(route: String) {\n    navigate(route) {\n        popUpTo(graph.findStartDestination().id) { saveState = true }\n        launchSingleTop = true\n        restoreState = true\n    }\n}\n\n\n@Composable\nfun AppNavHost(\n    navController: NavHostController,\n    modifier: Modifier = Modifier\n) {\n    NavHost(\n        navController = navController,\n        startDestination = Screen.Login.route,\n        modifier = modifier\n    ) {\n        composable(Screen.Login.route) {\n            LoginScreen(\n                onBack = {\n                    navController.popBackStack()\n                },\n                onLoggedIn = {\n                    navController.navigate(Screen.Home.route) {\n                        popUpTo(Screen.Welcome.route) {\n                            inclusive = true\n                        }\n                    }\n                },\n                onRegister = {\n                    navController.navigate(Screen.Register.route)\n                }\n            )\n        }\n\n        // REGISTER\n        composable(Screen.Register.route) {\n            RegisterScreen(\n                onBack = {\n                    navController.popBackStack()\n                },\n                onLogin = {\n                    navController.popBackStack()\n                }\n            )\n        }\n\n        composable(Screen.Home.route) {\n            HomeScreen(\n                onNext = {\n                    navController.navigateToTab(Screen.Infusions.route)\n                }\n            )\n        }\n\n        composable(Screen.Infusions.route) {\n            InfusionsScreen(\n                onNext = {\n                    navController.navigateToTab(Screen.Teas.route)\n                }\n            )\n        }\n\n        composable(Screen.Teas.route) {\n            TeasScreen(\n                onNext = {\n                    navController.navigateToTab(Screen.Profile.route)\n                }\n            )\n        }\n\n        composable(Screen.Profile.route) {\n            ProfileScreen(\n                onEditProfileClick = {\n                    navController.navigate(Screen.EditProfile.route)\n                }\n            )\n        }\n\n        composable(Screen.EditProfile.route) {\n            EditProfileScreen(\n                onLogoutClick = {\n                    navController.navigate(Screen.Login.route) {\n                        popUpTo(0) {\n                            inclusive = true\n                        }\n                    }\n                },\n                onDeleteAccount = {\n                    navController.navigate(Screen.Login.route) {\n                        popUpTo(0) {\n                            inclusive = true\n                        }\n                    }\n                },\n                onConfirm = {\n                    navController.popBackStack()\n                }\n            )\n        }\n    }\n}\n\n\n\n@Composable\nfun MainScreen() {\n    val navController = rememberNavController()\n\n    val currentRoute = navController\n        .currentBackStackEntryAsState()\n        .value?.destination?.route\n\n    val isAccessScreen =\n        currentRoute == Screen.Login.route ||\n                currentRoute == Screen.Register.route\n\n    Scaffold(\n        bottomBar = {\n            if (!isAccessScreen) {\n                NavigationBar {\n                    bottomBarScreens.forEach { screen ->\n                        NavigationBarItem(\n                            selected = currentRoute == screen.route,\n                            onClick = {\n                                navController.navigateToTab(screen.route)\n                            },\n                            icon = {\n                                InsertImage(imageResId = screen.iconRes)\n                            },\n                            label = {\n                                Text(screen.label)\n                            }\n                        )\n                    }\n                }\n            }\n        }\n    ) { innerPadding ->\n\n        AppLayout(\n            modifier = Modifier.padding(innerPadding),\n            showHeader = !isAccessScreen,\n            isProfile = currentRoute == Screen.Profile.route ||\n            currentRoute == Screen.EditProfile.route,\n            onProfileClick = {\n                navController.navigateToTab(Screen.Profile.route)\n            }\n        ) {\n            AppNavHost(\n                navController = navController,\n                modifier = Modifier.weight(1f)\n            )\n        }\n    }\n}\n\n@Composable\nfun InsertImage(\n    @DrawableRes imageResId: Int\n) {\n    Image(\n        painter = painterResource(id = imageResId),\n        contentDescription = \"Icono de navegación\"\n    )\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/aureapubishing/teaApp/ui/navigation/AppNavigation.kt b/app/src/main/java/com/aureapubishing/teaApp/ui/navigation/AppNavigation.kt
+--- a/app/src/main/java/com/aureapubishing/teaApp/ui/navigation/AppNavigation.kt	(revision de2da2d75dad512451eb16a6c0ff04c3e0ea2d08)
++++ b/app/src/main/java/com/aureapubishing/teaApp/ui/navigation/AppNavigation.kt	(date 1795509167306)
+@@ -192,7 +192,7 @@
+             modifier = Modifier.padding(innerPadding),
+             showHeader = !isAccessScreen,
+             isProfile = currentRoute == Screen.Profile.route ||
+-            currentRoute == Screen.EditProfile.route,
++                    currentRoute == Screen.EditProfile.route,
+             onProfileClick = {
+                 navController.navigateToTab(Screen.Profile.route)
+             }
+@@ -213,4 +213,4 @@
+         painter = painterResource(id = imageResId),
+         contentDescription = "Icono de navegación"
+     )
+-}
++}
+\ No newline at end of file
+Index: app/src/main/java/com/aureapubishing/teaApp/ui/componets/Header.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.aureapubishing.teaApp.ui.components\n\nimport androidx.compose.foundation.Image\nimport androidx.compose.foundation.background\nimport androidx.compose.foundation.clickable\nimport androidx.compose.foundation.layout.Arrangement\nimport androidx.compose.foundation.layout.Box\nimport androidx.compose.foundation.layout.Row\nimport androidx.compose.foundation.layout.fillMaxSize\nimport androidx.compose.foundation.layout.fillMaxWidth\nimport androidx.compose.foundation.layout.height\nimport androidx.compose.foundation.layout.padding\nimport androidx.compose.foundation.layout.size\nimport androidx.compose.foundation.shape.CircleShape\nimport androidx.compose.material3.MaterialTheme\nimport androidx.compose.material3.Text\nimport androidx.compose.runtime.Composable\nimport androidx.compose.ui.Alignment\nimport androidx.compose.ui.Modifier\nimport androidx.compose.ui.draw.clip\nimport androidx.compose.ui.graphics.Color\nimport androidx.compose.ui.res.painterResource\nimport androidx.compose.ui.unit.dp\nimport com.aureapubishing.teaApp.R\nimport com.aureapublishing.teaApp.ui.theme.Secondary100\n\n@Composable\nfun Header(\n    onProfileClick: () -> Unit,\n    isProfile: Boolean = false\n) {\n    Row(\n        modifier = Modifier\n            .fillMaxWidth()\n            .height(116.dp)\n            .background(MaterialTheme.colorScheme.outline)\n            .padding(horizontal = 16.dp),\n        horizontalArrangement = Arrangement.SpaceBetween,\n        verticalAlignment = Alignment.CenterVertically\n    ) {\n        Row(\n            verticalAlignment = Alignment.CenterVertically,\n            horizontalArrangement = Arrangement.spacedBy(8.dp)\n        ) {\n            Image(\n                painter = painterResource(R.drawable.favicon),\n                contentDescription = \"Logo de Tea-App\",\n                modifier = Modifier.size(68.dp)\n            )\n\n            Text(\n                text = \"Tea-App\",\n                style = MaterialTheme.typography.headlineMedium,\n                color = Secondary100\n            )\n        }\n\n        ProfileIcon(\n            onClick = onProfileClick,\n            isProfile = isProfile\n        )\n    }\n}\n\n@Composable\nfun ProfileIcon(\n    onClick: () -> Unit,\n    isProfile: Boolean = false\n) {\n    Box(\n        modifier = Modifier\n            .size(73.dp)\n            .clip(CircleShape)\n            .background(\n                if (isProfile) {\n                    Color(0xFFE0BB53)\n                } else {\n                    MaterialTheme.colorScheme.onBackground\n                }\n            )\n            .clickable(onClick = onClick)\n            .padding(6.dp),\n        contentAlignment = Alignment.Center\n    ) {\n        Box(\n            modifier = Modifier\n                .fillMaxSize()\n                .clip(CircleShape)\n                .background(MaterialTheme.colorScheme.surface),\n            contentAlignment = Alignment.Center\n        ) {\n            Image(\n                painter = painterResource(R.drawable.profile),\n                contentDescription = \"Perfil de usuario\",\n                modifier = Modifier.size(68.dp)\n            )\n        }\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/aureapubishing/teaApp/ui/componets/Header.kt b/app/src/main/java/com/aureapubishing/teaApp/ui/componets/Header.kt
+--- a/app/src/main/java/com/aureapubishing/teaApp/ui/componets/Header.kt	(revision de2da2d75dad512451eb16a6c0ff04c3e0ea2d08)
++++ b/app/src/main/java/com/aureapubishing/teaApp/ui/componets/Header.kt	(date 1795509218300)
+@@ -96,4 +96,4 @@
+             )
+         }
+     }
+-}
++}
+\ No newline at end of file
+Index: app/src/main/java/com/aureapubishing/teaApp/ui/layout/AppLayout.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\npackage com.aureapubishing.teaApp.ui.layout\n\nimport androidx.compose.foundation.layout.Column\nimport androidx.compose.foundation.layout.ColumnScope\nimport androidx.compose.foundation.layout.fillMaxSize\nimport androidx.compose.runtime.Composable\nimport androidx.compose.ui.Modifier\nimport com.aureapubishing.teaApp.ui.components.AppBackground\nimport com.aureapubishing.teaApp.ui.components.Header\n\n@Composable\nfun AppLayout(\n    modifier: Modifier = Modifier,\n    showHeader: Boolean = true,\n    isProfile: Boolean = false,\n    onProfileClick: () -> Unit,\n    content: @Composable ColumnScope.() -> Unit\n) {\n    AppBackground {\n        Column(\n            modifier = modifier.fillMaxSize()\n        ) {\n            if (showHeader) {\n                Header(\n                    onProfileClick = onProfileClick,\n                    isProfile = isProfile\n                )\n            }\n\n            content()\n        }\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/aureapubishing/teaApp/ui/layout/AppLayout.kt b/app/src/main/java/com/aureapubishing/teaApp/ui/layout/AppLayout.kt
+--- a/app/src/main/java/com/aureapubishing/teaApp/ui/layout/AppLayout.kt	(revision de2da2d75dad512451eb16a6c0ff04c3e0ea2d08)
++++ b/app/src/main/java/com/aureapubishing/teaApp/ui/layout/AppLayout.kt	(date 1795509200329)
+@@ -31,4 +31,4 @@
+             content()
+         }
+     }
+-}
++}
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_17\" default=\"true\" project-jdk-name=\"corretto-17\" project-jdk-type=\"JavaSDK\">\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\n  </component>\n  <component name=\"ProjectType\">\n    <option name=\"id\" value=\"Android\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision de2da2d75dad512451eb16a6c0ff04c3e0ea2d08)
++++ b/.idea/misc.xml	(date 1795508374520)
+@@ -1,7 +1,7 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="ExternalStorageConfigurationManager" enabled="true" />
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="corretto-17" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" project-jdk-name="temurin-17" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/build/classes" />
+   </component>
+   <component name="ProjectType">

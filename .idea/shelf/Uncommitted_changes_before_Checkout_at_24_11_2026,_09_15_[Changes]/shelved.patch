@@ -1,0 +1,31 @@
+Index: app/src/main/java/com/aureapubishing/teaApp/ui/componets/Header.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\npackage com.aureapubishing.teaApp.ui.components\n\nimport androidx.compose.foundation.Image\nimport androidx.compose.foundation.background\nimport androidx.compose.foundation.clickable\nimport androidx.compose.foundation.layout.Arrangement\nimport androidx.compose.foundation.layout.Box\nimport androidx.compose.foundation.layout.Row\nimport androidx.compose.foundation.layout.fillMaxSize\nimport androidx.compose.foundation.layout.fillMaxWidth\nimport androidx.compose.foundation.layout.height\nimport androidx.compose.foundation.layout.padding\nimport androidx.compose.foundation.layout.size\nimport androidx.compose.foundation.shape.CircleShape\nimport androidx.compose.material3.MaterialTheme\nimport androidx.compose.material3.Text\nimport androidx.compose.runtime.Composable\nimport androidx.compose.ui.Alignment\nimport androidx.compose.ui.Modifier\nimport androidx.compose.ui.draw.clip\nimport androidx.compose.ui.res.painterResource\nimport androidx.compose.ui.unit.dp\nimport com.aureapubishing.teaApp.R\nimport com.aureapublishing.teaApp.ui.theme.Secondary100\n\n@Composable\nfun Header(\n    onProfileClick: () -> Unit\n) {\n    Row(\n        modifier = Modifier\n            .fillMaxWidth()\n            .height(116.dp)\n            .background(MaterialTheme.colorScheme.outline)\n            .padding(horizontal = 16.dp),\n        horizontalArrangement = Arrangement.SpaceBetween,\n        verticalAlignment = Alignment.CenterVertically\n    ) {\n        Row(\n            verticalAlignment = Alignment.CenterVertically,\n            horizontalArrangement = Arrangement.spacedBy(8.dp)\n        ) {\n            Image(\n                painter = painterResource(R.drawable.favicon),\n                contentDescription = \"Logo de Tea-App\",\n                modifier = Modifier.size(68.dp)\n            )\n\n            Text(\n                text = \"Tea-App\",\n                style = MaterialTheme.typography.headlineMedium,\n                color = Secondary100\n            )\n        }\n\n        ProfileIcon(\n            onClick = onProfileClick\n        )\n    }\n}\n\n@Composable\nfun ProfileIcon(\n    onClick: () -> Unit\n) {\n    Box(\n        modifier = Modifier\n            .size(73.dp)\n            .clip(CircleShape)\n            .background(MaterialTheme.colorScheme.onBackground)\n            .clickable(onClick = onClick)\n            .padding(6.dp),\n        contentAlignment = Alignment.Center\n    ) {\n        Box(\n            modifier = Modifier\n                .fillMaxSize()\n                .clip(CircleShape)\n                .background(MaterialTheme.colorScheme.surface),\n            contentAlignment = Alignment.Center\n        ) {\n            Image(\n                painter = painterResource(R.drawable.profile),\n                contentDescription = \"Perfil de usuario\",\n                modifier = Modifier.size(68.dp)\n            )\n        }\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/aureapubishing/teaApp/ui/componets/Header.kt b/app/src/main/java/com/aureapubishing/teaApp/ui/componets/Header.kt
+--- a/app/src/main/java/com/aureapubishing/teaApp/ui/componets/Header.kt	(revision 290ab469ab51bf1a6a052274f5fbba7d7181edc0)
++++ b/app/src/main/java/com/aureapubishing/teaApp/ui/componets/Header.kt	(date 1795275712305)
+@@ -23,6 +23,9 @@
+ import androidx.compose.ui.unit.dp
+ import com.aureapubishing.teaApp.R
+ import com.aureapublishing.teaApp.ui.theme.Secondary100
++import androidx.compose.foundation.layout.WindowInsets
++import androidx.compose.foundation.layout.statusBars
++import androidx.compose.foundation.layout.windowInsetsPadding
+ 
+ @Composable
+ fun Header(
+@@ -31,8 +34,9 @@
+     Row(
+         modifier = Modifier
+             .fillMaxWidth()
+-            .height(116.dp)
+             .background(MaterialTheme.colorScheme.outline)
++            .windowInsetsPadding(WindowInsets.statusBars)
++            .height(116.dp)
+             .padding(horizontal = 16.dp),
+         horizontalArrangement = Arrangement.SpaceBetween,
+         verticalAlignment = Alignment.CenterVertically

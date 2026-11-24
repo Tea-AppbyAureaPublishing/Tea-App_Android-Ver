@@ -192,7 +192,7 @@ fun MainScreen() {
 
         AppLayout(
             modifier = Modifier.padding(innerPadding),
-            showHeader = currentRoute != "login",
+            showHeader = !isAccessScreen,
             isProfile = currentRoute == Screen.Profile.route ||
             currentRoute == Screen.EditProfile.route,
             onProfileClick = {
