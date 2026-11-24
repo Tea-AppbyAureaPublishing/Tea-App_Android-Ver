@@ -3,7 +3,9 @@ package com.aureapubishing.teaApp.ui.screens.login
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -31,30 +33,37 @@ fun LoginScreen(
     var error by remember { mutableStateOf<String?>(null) }
 
     AppBackground {
-
         Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(top = 30.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(70.dp))
 
+            // Título
             Text(
                 text = "Bienvenido a Tea-App",
-                style = MaterialTheme.typography.headlineMedium, // Tipografía principal del tema
-                color = MaterialTheme.colorScheme.onBackground // Primary500 (texto sobre fondo)
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onBackground
             )
 
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
+            // Logo
             Image(
                 painter = painterResource(id = R.drawable.favicon),
                 contentDescription = "Logo de Tea-App",
                 modifier = Modifier.size(120.dp)
             )
 
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // Formulario
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp),
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
                 contentAlignment = Alignment.Center
             ) {
                 LoginForm(
@@ -80,9 +89,7 @@ fun LoginScreen(
                     onBack = onBack
                 )
             }
-
         }
-
     }
 }
 

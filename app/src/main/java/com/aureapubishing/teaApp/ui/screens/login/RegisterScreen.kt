@@ -1,3 +1,4 @@
+
 package com.aureapubishing.teaApp.ui.screens.login
 
 import androidx.compose.foundation.Image
@@ -10,7 +11,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
@@ -38,81 +38,86 @@ fun RegisterScreen(
     var message by remember { mutableStateOf<String?>(null) }
 
     AppBackground {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(top = 30.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Text(
+                text = "Bienvenido a Tea-App",
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Image(
+                painter = painterResource(id = R.drawable.favicon),
+                contentDescription = "Logo de Tea-App",
+                modifier = Modifier.size(120.dp)
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.favicon),
-                    contentDescription = "Logo de Tea-App",
-                    modifier = Modifier.size(120.dp)
+                RegisterForm(
+                    email = email,
+                    password = password,
+                    confirmPassword = confirmPassword,
+                    error = error,
+                    message = message,
+                    onEmailChange = {
+                        email = it
+                        error = null
+                        message = null
+                    },
+                    onPasswordChange = {
+                        password = it
+                        error = null
+                        message = null
+                    },
+                    onConfirmPasswordChange = {
+                        confirmPassword = it
+                        error = null
+                        message = null
+                    },
+                    onRegister = {
+                        error = validateRegister(
+                            name,
+                            email,
+                            password,
+                            confirmPassword
+                        )
+
+                        if (error == null) {
+                            // FUTURA CONEXIÓN CON LA BBDD
+                            onLogin()
+                        }
+                    },
+                    onLogin = onLogin,
+                    onBack = onBack
                 )
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(20.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    RegisterForm(
-                        name = name,
-                        email = email,
-                        password = password,
-                        confirmPassword = confirmPassword,
-                        error = error,
-                        message = message,
-                        onNameChange = {
-                            name = it
-                            error = null
-                            message = null
-                        },
-                        onEmailChange = {
-                            email = it
-                            error = null
-                            message = null
-                        },
-                        onPasswordChange = {
-                            password = it
-                            error = null
-                            message = null
-                        },
-                        onConfirmPasswordChange = {
-                            confirmPassword = it
-                            error = null
-                            message = null
-                        },
-                        onRegister = {
-                            error = validateRegister(
-                                name,
-                                email,
-                                password,
-                                confirmPassword
-                            )
-
-                            if (error == null) {
-                                // FUTURA CONEXIÓN CON LA BBDD:
-                                // Aquí se creará el usuario en el servidor.
-
-                                onLogin()
-                            }
-                        },
-                        onLogin = onLogin,
-                        onBack = onBack
-                    )
-                }
             }
         }
+    }
 }
 
 // Formulario completo de registro
 @Composable
 private fun RegisterForm(
-    name: String,
     email: String,
     password: String,
     confirmPassword: String,
     error: String?,
     message: String?,
-    onNameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onConfirmPasswordChange: (String) -> Unit,
@@ -124,8 +129,7 @@ private fun RegisterForm(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(25.dp))
-            .background(MaterialTheme.colorScheme.surface) // Secondary100 (tarjetas y superficies)
-            .verticalScroll(rememberScrollState())
+            .background(MaterialTheme.colorScheme.surface)
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -133,12 +137,8 @@ private fun RegisterForm(
         Text(
             text = "Crear cuenta",
             style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.onSurface // Primary500 (texto sobre superficie)
+            color = MaterialTheme.colorScheme.onSurface
         )
-
-        Spacer(modifier = Modifier.height(25.dp))
-
-        NameField(name, onNameChange)
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -160,41 +160,22 @@ private fun RegisterForm(
             onPasswordChange = onConfirmPasswordChange
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
-        // Mensajes de error o información
         FormMessages(
             error = error,
             message = message
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         RegisterButton(onClick = onRegister)
-
-        Spacer(modifier = Modifier.height(12.dp))
 
         RegisterNavigationButtons(
             onLogin = onLogin,
             onBack = onBack
         )
     }
-}
-
-// Campo para introducir el nombre
-@Composable
-private fun NameField(
-    name: String,
-    onNameChange: (String) -> Unit
-) {
-    OutlinedTextField(
-        value = name,
-        onValueChange = onNameChange,
-        label = { Text("Nombre") },
-        placeholder = { Text("Introduce tu nombre") },
-        modifier = Modifier.fillMaxWidth(),
-        singleLine = true
-    )
 }
 
 // Campo para introducir el correo
@@ -238,7 +219,6 @@ private fun validateRegister(
     confirmPassword: String
 ): String? {
     if (
-        name.isBlank() ||
         email.isBlank() ||
         password.isBlank() ||
         confirmPassword.isBlank()
@@ -269,14 +249,14 @@ private fun FormMessages(
     error?.let {
         Text(
             text = it,
-            color = MaterialTheme.colorScheme.error // Color de error del tema
+            color = MaterialTheme.colorScheme.error
         )
     }
 
     message?.let {
         Text(
             text = it,
-            color = MaterialTheme.colorScheme.secondary // Primary400 (verde oscuro legible sobre surface)
+            color = MaterialTheme.colorScheme.secondary
         )
     }
 }
@@ -292,8 +272,8 @@ private fun RegisterButton(
             .fillMaxWidth()
             .height(55.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary, // Secondary300 (acción principal)
-            contentColor = MaterialTheme.colorScheme.onPrimary // Primary500 (texto sobre primario)
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
         )
     ) {
         Text("Crear cuenta")
@@ -312,7 +292,7 @@ private fun RegisterNavigationButtons(
     ) {
         Text(
             text = "¿Ya tienes cuenta? Inicia sesión",
-            color = MaterialTheme.colorScheme.secondary // Primary400 (identidad verde secundaria)
+            color = MaterialTheme.colorScheme.secondary
         )
     }
 }
