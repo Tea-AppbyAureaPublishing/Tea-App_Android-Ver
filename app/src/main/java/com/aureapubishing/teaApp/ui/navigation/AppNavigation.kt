@@ -123,6 +123,9 @@ fun AppNavHost(
             ProfileScreen(
                 onEditProfileClick = {
                     navController.navigate(Screen.EditProfile.route)
+                },
+                onCerrarSesionClick = {
+                    navController.navigate(Screen.Login.route)
                 }
             )
         }

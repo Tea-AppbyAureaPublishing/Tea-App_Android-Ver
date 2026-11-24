@@ -17,14 +17,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.aureapubishing.teaApp.R
+import com.aureapubishing.teaApp.ui.navigation.Screen
 
 
 // Pantalla principal del perfil
 @Composable
 fun ProfileScreen(
-    onEditProfileClick: () -> Unit
+    onEditProfileClick: () -> Unit,
+    onCerrarSesionClick: () -> Unit
 ) {
     // Al entrar no habrá ninguna sección seleccionada
     var selectedSection by remember { mutableStateOf<String?>(null) }
@@ -39,7 +42,8 @@ fun ProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ProfileContent(
-                onEditProfileClick = onEditProfileClick
+                onEditProfileClick = onEditProfileClick,
+                onCerrarSesionCLick = onCerrarSesionClick
             )
 
             ProfileOption(
@@ -78,7 +82,8 @@ private fun SelectedProfileSection(
 // Contenido superior del perfil
 @Composable
 fun ProfileContent(
-    onEditProfileClick: () -> Unit
+    onEditProfileClick: () -> Unit,
+    onCerrarSesionCLick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -95,7 +100,8 @@ fun ProfileContent(
         Spacer(modifier = Modifier.height(20.dp))
 
         ProfileUserCard(
-            onEditProfileClick = onEditProfileClick
+            onEditProfileClick = onEditProfileClick,
+            onCerrarSesionClick = onCerrarSesionCLick
         )
     }
 }
@@ -103,7 +109,8 @@ fun ProfileContent(
 // Tarjeta con la información del usuario
 @Composable
 fun ProfileUserCard(
-    onEditProfileClick: () -> Unit
+    onEditProfileClick: () -> Unit,
+    onCerrarSesionClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -123,7 +130,8 @@ fun ProfileUserCard(
             ProfileImage()
 
             ProfileUserInformation(
-                onEditProfileClick = onEditProfileClick
+                onEditProfileClick = onEditProfileClick,
+                onCerrarSesionClick = onCerrarSesionClick
             )
         }
     }
@@ -156,7 +164,8 @@ private fun ProfileImage() {
 // Nombre, correo y botón de edición
 @Composable
 private fun ProfileUserInformation(
-    onEditProfileClick: () -> Unit
+    onEditProfileClick: () -> Unit,
+    onCerrarSesionClick: () -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -178,15 +187,42 @@ private fun ProfileUserInformation(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Button(
-            onClick = onEditProfileClick,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.inverseSurface, // Primary500 (verde muy oscuro)
-                contentColor = MaterialTheme.colorScheme.inverseOnSurface // Secondary100 (crema)
-            )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 5.dp, vertical = 10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(text = "Editar perfil")
+            Button(
+                onClick = onEditProfileClick,
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.inverseSurface,
+                    contentColor = MaterialTheme.colorScheme.inverseOnSurface
+                )
+            ) {
+                Text(text = "Editar perfil")
+            }
+
+            Button(
+                onClick = onCerrarSesionClick,
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.inverseSurface,
+                    contentColor = MaterialTheme.colorScheme.inverseOnSurface
+                )
+            ) {
+                Text(
+                    text = "Cerrar Sesión",
+                    maxLines = 1,
+                    softWrap = false,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
+
     }
 }
 
