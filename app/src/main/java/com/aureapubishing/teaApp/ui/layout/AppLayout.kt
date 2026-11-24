@@ -13,6 +13,7 @@ import com.aureapubishing.teaApp.ui.components.Header
 fun AppLayout(
     modifier: Modifier = Modifier,
     showHeader: Boolean = true,
+    isProfile: Boolean = false,
     onProfileClick: () -> Unit,
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -22,7 +23,8 @@ fun AppLayout(
         ) {
             if (showHeader) {
                 Header(
-                    onProfileClick = onProfileClick
+                    onProfileClick = onProfileClick,
+                    isProfile = isProfile
                 )
             }
 

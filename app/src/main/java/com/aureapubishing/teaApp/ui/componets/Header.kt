@@ -1,4 +1,3 @@
-
 package com.aureapubishing.teaApp.ui.components
 
 import androidx.compose.foundation.Image
@@ -7,11 +6,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.aureapubishing.teaApp.R
@@ -26,14 +29,16 @@ import com.aureapublishing.teaApp.ui.theme.Secondary100
 
 @Composable
 fun Header(
-    onProfileClick: () -> Unit
+    onProfileClick: () -> Unit,
+    isProfile: Boolean = false
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(64.dp)
-            .background(MaterialTheme.colorScheme.inversePrimary)
-            .padding(horizontal = 16.dp),
+            .height(136.dp)
+            .background(MaterialTheme.colorScheme.outline)
+            .windowInsetsPadding(WindowInsets.statusBars)
+            .padding(horizontal = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -44,33 +49,41 @@ fun Header(
             Image(
                 painter = painterResource(R.drawable.favicon),
                 contentDescription = "Logo de Tea-App",
-                modifier = Modifier.size(38.dp)
+                modifier = Modifier.size(68.dp)
             )
 
             Text(
                 text = "Tea-App",
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.headlineMedium,
                 color = Secondary100
             )
         }
 
         ProfileIcon(
-            onClick = onProfileClick
+            onClick = onProfileClick,
+            isProfile = isProfile
         )
     }
 }
 
 @Composable
 fun ProfileIcon(
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    isProfile: Boolean = false
 ) {
     Box(
         modifier = Modifier
-            .size(44.dp)
+            .size(73.dp)
             .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.onBackground)
+            .background(
+                if (isProfile) {
+                    Color(0xFFE0BB53)
+                } else {
+                    MaterialTheme.colorScheme.onBackground
+                }
+            )
             .clickable(onClick = onClick)
-            .padding(4.dp),
+            .padding(6.dp),
         contentAlignment = Alignment.Center
     ) {
         Box(
@@ -83,7 +96,7 @@ fun ProfileIcon(
             Image(
                 painter = painterResource(R.drawable.profile),
                 contentDescription = "Perfil de usuario",
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(68.dp)
             )
         }
     }
