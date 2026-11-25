@@ -116,7 +116,7 @@ fun ProfileUserCard(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = MaterialTheme.colorScheme.surface, // Secondary100 (fondo de tarjeta)
+                color = MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(20.dp)
             )
             .padding(20.dp),
@@ -129,11 +129,13 @@ fun ProfileUserCard(
         ) {
             ProfileImage()
 
-            ProfileUserInformation(
-                onEditProfileClick = onEditProfileClick,
-                onCerrarSesionClick = onCerrarSesionClick
-            )
+            ProfileUserInformation()
         }
+
+        ProfileUserClick(
+            onEditProfileClick = onEditProfileClick,
+            onCerrarSesionClick = onCerrarSesionClick
+        )
     }
 }
 
@@ -144,7 +146,7 @@ private fun ProfileImage() {
         modifier = Modifier
             .size(110.dp)
             .background(
-                color = MaterialTheme.colorScheme.outline, // Primary200 (verde suave para el avatar)
+                color = MaterialTheme.colorScheme.outline,
                 shape = CircleShape
             ),
         contentAlignment = Alignment.Center
@@ -161,12 +163,9 @@ private fun ProfileImage() {
     }
 }
 
-// Nombre, correo y botón de edición
+// Nombre, correo
 @Composable
-private fun ProfileUserInformation(
-    onEditProfileClick: () -> Unit,
-    onCerrarSesionClick: () -> Unit
-) {
+private fun ProfileUserInformation() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -174,7 +173,7 @@ private fun ProfileUserInformation(
         Text(
             text = "Nombre de usuario",
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface // Primary500 (texto sobre superficie)
+            color = MaterialTheme.colorScheme.onSurface
         )
 
         Spacer(modifier = Modifier.height(5.dp))
@@ -182,47 +181,56 @@ private fun ProfileUserInformation(
         Text(
             text = "correo@ejemplo.com",
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant // Color secundario legible sobre superficie
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+    }
+}
 
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 5.dp, vertical = 10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+// Botones de Editar perfil y cerrar sesion
+@Composable
+private fun ProfileUserClick(
+    onEditProfileClick: () -> Unit,
+    onCerrarSesionClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 5.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Button(
+            onClick = onEditProfileClick,
+            modifier = Modifier.weight(1f),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.inverseSurface,
+                contentColor = MaterialTheme.colorScheme.inverseOnSurface
+            )
         ) {
-            Button(
-                onClick = onEditProfileClick,
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.inverseSurface,
-                    contentColor = MaterialTheme.colorScheme.inverseOnSurface
-                )
-            ) {
-                Text(text = "Editar perfil")
-            }
-
-            Button(
-                onClick = onCerrarSesionClick,
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 10.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.inverseSurface,
-                    contentColor = MaterialTheme.colorScheme.inverseOnSurface
-                )
-            ) {
-                Text(
-                    text = "Cerrar Sesión",
-                    maxLines = 1,
-                    softWrap = false,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+            Text(
+                text = "Editar perfil",
+                maxLines = 1,
+                softWrap = false,
+                overflow = TextOverflow.Ellipsis
+            )
         }
 
+        Button(
+            onClick = onCerrarSesionClick,
+            modifier = Modifier.weight(1f),
+            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 10.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.inverseSurface,
+                contentColor = MaterialTheme.colorScheme.inverseOnSurface
+            )
+        ) {
+            Text(
+                text = "Cerrar Sesión",
+                maxLines = 1,
+                softWrap = false,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
     }
 }
 
@@ -324,7 +332,7 @@ private fun MyTeaItem(
             .fillMaxWidth()
             .padding(bottom = 12.dp)
             .background(
-                color = MaterialTheme.colorScheme.surface, // Secondary100
+                color = MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(16.dp)
             )
             .padding(18.dp),
@@ -334,7 +342,7 @@ private fun MyTeaItem(
         Text(
             text = tea,
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface // Primary500
+            color = MaterialTheme.colorScheme.onSurface
         )
     }
 }
@@ -353,7 +361,7 @@ fun EmptySectionContent(
         Text(
             text = message,
             style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onBackground // Primary500 (texto sobre fondo general)
+            color = MaterialTheme.colorScheme.onBackground
         )
     }
 }
