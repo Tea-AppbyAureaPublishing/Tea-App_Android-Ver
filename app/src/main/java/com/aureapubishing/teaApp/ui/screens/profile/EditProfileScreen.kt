@@ -22,8 +22,6 @@ import com.aureapubishing.teaApp.ui.components.AppBackground
 
 @Composable
 fun EditProfileScreen(
-    onLogoutClick: () -> Unit,
-    onDeleteAccount: () -> Unit,
     onConfirm: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
@@ -119,7 +117,7 @@ fun EditProfileScreen(
                 // Aquí llamaremos a la función que eliminará
                 // la cuenta del usuario en el servidor.
 
-                onDeleteAccount()
+                //onDeleteAccount()
             }
         )
     }
