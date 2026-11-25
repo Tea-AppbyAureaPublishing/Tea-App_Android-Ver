@@ -2,6 +2,7 @@ package com.aureapubishing.teaApp.ui.navigation
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -169,6 +170,7 @@ fun MainScreen() {
                 currentRoute == Screen.Register.route
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             if (!isAccessScreen) {
                 NavigationBar {
@@ -193,7 +195,7 @@ fun MainScreen() {
 
         AppLayout(
             modifier = Modifier.padding(innerPadding),
-            showHeader = !isAccessScreen,
+            showHeader = currentRoute != "login",
             isProfile = currentRoute == Screen.Profile.route ||
             currentRoute == Screen.EditProfile.route,
             onProfileClick = {
