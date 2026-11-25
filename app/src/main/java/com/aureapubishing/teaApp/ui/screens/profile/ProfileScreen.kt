@@ -17,14 +17,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.aureapubishing.teaApp.R
+import com.aureapubishing.teaApp.ui.navigation.Screen
 
 
 // Pantalla principal del perfil
 @Composable
 fun ProfileScreen(
-    onEditProfileClick: () -> Unit
+    onEditProfileClick: () -> Unit,
+    onCerrarSesionClick: () -> Unit
 ) {
     // Al entrar no habrá ninguna sección seleccionada
     var selectedSection by remember { mutableStateOf<String?>(null) }
@@ -39,7 +42,8 @@ fun ProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ProfileContent(
-                onEditProfileClick = onEditProfileClick
+                onEditProfileClick = onEditProfileClick,
+                onCerrarSesionCLick = onCerrarSesionClick
             )
 
             ProfileOption(
@@ -78,7 +82,8 @@ private fun SelectedProfileSection(
 // Contenido superior del perfil
 @Composable
 fun ProfileContent(
-    onEditProfileClick: () -> Unit
+    onEditProfileClick: () -> Unit,
+    onCerrarSesionCLick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -95,7 +100,8 @@ fun ProfileContent(
         Spacer(modifier = Modifier.height(20.dp))
 
         ProfileUserCard(
-            onEditProfileClick = onEditProfileClick
+            onEditProfileClick = onEditProfileClick,
+            onCerrarSesionClick = onCerrarSesionCLick
         )
     }
 }
@@ -103,13 +109,14 @@ fun ProfileContent(
 // Tarjeta con la información del usuario
 @Composable
 fun ProfileUserCard(
-    onEditProfileClick: () -> Unit
+    onEditProfileClick: () -> Unit,
+    onCerrarSesionClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = MaterialTheme.colorScheme.surface, // Secondary100 (fondo de tarjeta)
+                color = MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(20.dp)
             )
             .padding(20.dp),
@@ -122,10 +129,13 @@ fun ProfileUserCard(
         ) {
             ProfileImage()
 
-            ProfileUserInformation(
-                onEditProfileClick = onEditProfileClick
-            )
+            ProfileUserInformation()
         }
+
+        ProfileUserClick(
+            onEditProfileClick = onEditProfileClick,
+            onCerrarSesionClick = onCerrarSesionClick
+        )
     }
 }
 
@@ -136,7 +146,7 @@ private fun ProfileImage() {
         modifier = Modifier
             .size(110.dp)
             .background(
-                color = MaterialTheme.colorScheme.outline, // Primary200 (verde suave para el avatar)
+                color = MaterialTheme.colorScheme.outline,
                 shape = CircleShape
             ),
         contentAlignment = Alignment.Center
@@ -153,11 +163,9 @@ private fun ProfileImage() {
     }
 }
 
-// Nombre, correo y botón de edición
+// Nombre, correo
 @Composable
-private fun ProfileUserInformation(
-    onEditProfileClick: () -> Unit
-) {
+private fun ProfileUserInformation() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -165,7 +173,7 @@ private fun ProfileUserInformation(
         Text(
             text = "Nombre de usuario",
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface // Primary500 (texto sobre superficie)
+            color = MaterialTheme.colorScheme.onSurface
         )
 
         Spacer(modifier = Modifier.height(5.dp))
@@ -173,19 +181,55 @@ private fun ProfileUserInformation(
         Text(
             text = "correo@ejemplo.com",
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant // Color secundario legible sobre superficie
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+    }
+}
 
-        Spacer(modifier = Modifier.height(12.dp))
-
+// Botones de Editar perfil y cerrar sesion
+@Composable
+private fun ProfileUserClick(
+    onEditProfileClick: () -> Unit,
+    onCerrarSesionClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 5.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
         Button(
             onClick = onEditProfileClick,
+            modifier = Modifier.weight(1f),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.inverseSurface, // Primary500 (verde muy oscuro)
-                contentColor = MaterialTheme.colorScheme.inverseOnSurface // Secondary100 (crema)
+                containerColor = MaterialTheme.colorScheme.inverseSurface,
+                contentColor = MaterialTheme.colorScheme.inverseOnSurface
             )
         ) {
-            Text(text = "Editar perfil")
+            Text(
+                text = "Editar perfil",
+                maxLines = 1,
+                softWrap = false,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+
+        Button(
+            onClick = onCerrarSesionClick,
+            modifier = Modifier.weight(1f),
+            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 10.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.inverseSurface,
+                contentColor = MaterialTheme.colorScheme.inverseOnSurface
+            )
+        ) {
+            Text(
+                text = "Cerrar Sesión",
+                maxLines = 1,
+                softWrap = false,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }
@@ -288,7 +332,7 @@ private fun MyTeaItem(
             .fillMaxWidth()
             .padding(bottom = 12.dp)
             .background(
-                color = MaterialTheme.colorScheme.surface, // Secondary100
+                color = MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(16.dp)
             )
             .padding(18.dp),
@@ -298,7 +342,7 @@ private fun MyTeaItem(
         Text(
             text = tea,
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface // Primary500
+            color = MaterialTheme.colorScheme.onSurface
         )
     }
 }
@@ -317,7 +361,7 @@ fun EmptySectionContent(
         Text(
             text = message,
             style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onBackground // Primary500 (texto sobre fondo general)
+            color = MaterialTheme.colorScheme.onBackground
         )
     }
 }

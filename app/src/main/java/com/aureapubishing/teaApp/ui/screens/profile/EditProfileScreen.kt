@@ -22,8 +22,6 @@ import com.aureapubishing.teaApp.ui.components.AppBackground
 
 @Composable
 fun EditProfileScreen(
-    onLogoutClick: () -> Unit,
-    onDeleteAccount: () -> Unit,
     onConfirm: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
@@ -103,14 +101,6 @@ fun EditProfileScreen(
                     }
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
-
-                ProfileActions(
-                    onLogout = onLogoutClick,
-                    onDelete = {
-                        showDeleteDialog = true
-                    }
-                )
             }
         }
     }
@@ -127,7 +117,7 @@ fun EditProfileScreen(
                 // Aquí llamaremos a la función que eliminará
                 // la cuenta del usuario en el servidor.
 
-                onDeleteAccount()
+                //onDeleteAccount()
             }
         )
     }
@@ -238,55 +228,9 @@ private fun ConfirmChangesButton(
         onClick = onClick,
     ) {
         Text(
-            text = "Confirmar",
+            text = "Confirmar cambios",
             style = MaterialTheme.typography.labelLarge
         )
-    }
-}
-
-// Botones de acciones del perfil
-@Composable
-private fun ProfileActions(
-    onLogout: () -> Unit,
-    onDelete: () -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Button(
-            onClick = onLogout,
-            modifier = Modifier.weight(1f),
-            contentPadding = PaddingValues(horizontal = 4.dp),
-            colors = ButtonDefaults.outlinedButtonColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.error
-            )
-        ) {
-            Text(
-                text = "Cerrar sesión",
-                color = Color.Red,
-                style = MaterialTheme.typography.labelSmall,
-                maxLines = 1
-            )
-        }
-
-        Button(
-            onClick = onDelete,
-            modifier = Modifier.weight(1f),
-            contentPadding = PaddingValues(horizontal = 4.dp),
-            colors = ButtonDefaults.outlinedButtonColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.error
-            )
-        ) {
-            Text(
-                text = "Eliminar cuenta",
-                style = MaterialTheme.typography.labelSmall,
-                color = Color.Red,
-                maxLines = 1
-            )
-        }
     }
 }
 
